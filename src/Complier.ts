@@ -4,23 +4,17 @@ import path from 'path';
 import acorn from 'acorn';
 
 class Complier {
-    configs: { entry: string };
-    constructor(configs: { entry: string }) {
+    configs: { entry: string, modules: { rules: Array<object> } };
+    constructor(configs: { entry: string, modules: { rules: Array<object> } }) {
         this.configs = configs;
     }
 
     run() {
+        // 这里暂时，调用一次run，执行一次编译。
+        // 后面再改为监听文件变化，动态执行
         // 运行入口
         const complication = new Complication(this);
-        const entry = this.configs.entry;
-        this.analysisFile(entry);
-    }
-
-    analysisFile(filePath: string) {
-        // 解析单个文件
-        console.log('filePath', filePath);
-        const fileContent = fs.readFileSync(filePath, {encoding: 'utf-8'});
-        console.log(fileContent);
+        complication.start();
     }
 }
 
