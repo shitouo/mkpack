@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
-class Complication {
+class Compilation {
     constructor(complierIns) {
         this.complierIns = complierIns;
     }
@@ -36,12 +36,15 @@ class Complication {
         const fileContent = fs_1.default.readFileSync(filePath, {
             encoding: 'utf-8',
         });
+        // 执行所有的loader
         try {
-            moduleRules.forEach(rule => {
+            let result = fileContent;
+            moduleRules.reverse().forEach(rule => {
                 const { test, use } = rule;
                 if (test && test.test(filePath)) {
                     Promise.resolve().then(() => __importStar(require(use.loader))).then(({ default: module }) => {
-                        const result = module(fileContent);
+                        result = module(result);
+                        console.log('result-------', result);
                     });
                 }
             });
@@ -51,4 +54,4 @@ class Complication {
         }
     }
 }
-exports.default = Complication;
+exports.default = Compilation;
